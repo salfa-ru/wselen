@@ -4,8 +4,8 @@ import cProfile
 import math
 import random
 
-from . import entities
-from . import states
+from entities import *
+#from states import *
 
 
 def profile(func):
@@ -457,8 +457,8 @@ class Mate(Action):
         if not self.action_possible():
             return
 
-        self._target_entity.add_state(states.Pregnant(self._target_entity))
-        self.subject.add_state(states.NotTheRightMood(self.subject))
+        self._target_entity.add_state(Pregnant(self._target_entity))
+        self.subject.add_state(NotTheRightMood(self.subject))
 
         self._done = True
 
@@ -468,56 +468,6 @@ class Mate(Action):
 
     def check_set_results(self):
         self.accomplished = self._done
-
-
-class GiveBirth(Action):
-    def __init__(self, subject, pregnant_state):
-        super(GiveBirth, self).__init__(subject)
-
-        self.pregnant_state = pregnant_state
-
-    def action_possible(self):
-        cells_around = self.get_empty_cells_around()
-
-        if not cells_around:
-            return False
-
-        return True
-
-    def do(self):
-        if self.results["done"]:
-            return
-
-        if not self.action_possible():
-            return
-
-        cells_around = self.get_empty_cells_around()
-
-        place = random.choice(cells_around)
-
-        offspring = entities.Creature()
-
-        self.subject.board.insert_object(place[0], place[1], offspring, epoch_shift=1)
-
-        self.subject.remove_state(self.pregnant_state)
-
-        self._done = True
-
-        self.check_set_results()
-
-    def get_empty_cells_around(self):
-        cells_near = []
-
-        if self.subject.board.cell_passable(self.subject.x, self.subject.y + 1):
-            cells_near.append((self.subject.x, self.subject.y + 1))
-        if self.subject.board.cell_passable(self.subject.x, self.subject.y - 1):
-            cells_near.append((self.subject.x, self.subject.y - 1))
-        if self.subject.board.cell_passable(self.subject.x + 1, self.subject.y):
-            cells_near.append((self.subject.x + 1, self.subject.y))
-        if self.subject.board.cell_passable(self.subject.x - 1, self.subject.y):
-            cells_near.append((self.subject.x - 1, self.subject.y))
-
-        return cells_near
 
 
 class HarvestSubstance(Action):
@@ -607,7 +557,7 @@ class GoMating(Action):
         return self.current_action.action_possible()
 
     def do(self):
-        if self.subject.has_state(states.NotTheRightMood):
+        if self.subject.has_state(NotTheRightMood):
             self._done = True
             return
 

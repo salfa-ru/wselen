@@ -3,10 +3,11 @@
 import random
 import numpy as np
 
-from . import action_library as actions
-from . import brain
-from . import states
-from . import substances
+import action_library
+from action_library import *
+from brain import *
+from states import *
+from substances import *
 import collections
 
 
@@ -115,7 +116,7 @@ class Blank(Entity):
         super(Blank, self).live()
 
         if random.random() <= 0.0004:
-            self._container.append(substances.Substance())
+            self._container.append(Substance())
 
         if len(self._container) > 0:
             self.color = "#224444"
@@ -145,7 +146,7 @@ class Agent(Entity):
         self.name = ''
         self.sex = random.choice([True, False])
 
-        self.private_learning_memory = brain.LearningMemory(self)
+        self.private_learning_memory = LearningMemory(self)
         self.public_memory = None
 
         self.private_decision_model = None
@@ -245,8 +246,8 @@ class Agent(Entity):
 
         if memory_to_use is None or model_to_use is None:
             raise Exception("You should set memory and model types ('public' or 'private')")
-
-        table_list = memory_to_use.make_table(actions.GoMating)
+        #action_library.GoMating
+        table_list = memory_to_use.make_table(action_library.GoMating)
         if len(table_list) >= self.memory_batch_size:
             df_train = np.asarray(table_list)
             # print df_train
@@ -296,8 +297,8 @@ class Agent(Entity):
             return None
 
         target_raw = self.memorize_tasks[action_type]["target"]
-
-        if isinstance(target_raw, collections.Callable):
+        #collections.Callable
+        if isinstance(target_raw,  collections.abc.Callable):
             return target_raw()
         elif isinstance(target_raw, dict):
             if "kwargs" in target_raw:
@@ -321,7 +322,7 @@ class Creature(Agent):
         else:
             self.color = "#990000"
         self.mortal = True
-        self.private_learning_memory = brain.LearningMemory(self)
+        self.private_learning_memory = LearningMemory(self)
         self.public_memory = None
 
         self.private_decision_model = None
@@ -379,9 +380,9 @@ class Creature(Agent):
                     return False
 
                 if self.sex:
-                    return not with_who.has_state(states.Pregnant)
+                    return not with_who.has_state(Pregnant)
                 else:
-                    return not self.has_state(states.Pregnant)
+                    return not self.has_state(Pregnant)
 
         return False
 
@@ -390,12 +391,12 @@ class Creature(Agent):
             return False
 
         if self.sex:
-            if self.has_state(states.NotTheRightMood):
+            if self.has_state(NotTheRightMood):
                 return False
             return True
         else:
-            self_has_substance = self.count_substance_of_type(substances.Substance)
-            partner_has_substance = with_who.count_substance_of_type(substances.Substance)
+            self_has_substance = self.count_substance_of_type(Substance)
+            partner_has_substance = with_who.count_substance_of_type(Substance)
             if self_has_substance + partner_has_substance == 0:
                 return False
             if self_has_substance <= partner_has_substance:

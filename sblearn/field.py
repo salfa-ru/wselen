@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .entities import *
+from entities import *
 import pickle
 import threading
 
