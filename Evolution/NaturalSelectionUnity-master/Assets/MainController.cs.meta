@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: df4b2b00457fc3a47b21279c19b30111
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bacteriumPrefab: {fileID: 2285095396350154574, guid: 961dbe01cae7e7f4ca9005c288da943e,
+      type: 3}
+  - boidPrefab: {fileID: 2285095396350154574, guid: af0094d2239f1e140aa0e54bd2300e2a,
+      type: 3}
+  - foodPrefab: {fileID: 768593241845746938, guid: 2c18a974f4e83664c936f1de7c0f2ad9,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
